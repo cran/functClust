@@ -1,0 +1,77 @@
+#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+#'
+#' @name functClust-package
+#'
+#' @docType package
+#'
+#' @title Functional Clustering
+#' of Redundant Components of a System
+#'
+#' @description Cluster together the components
+#' that make up an interactive system
+#' on the basis of their functional redundancy
+#' on one or more collective, systemic performances.
+#' Plot the hierarchical tree of component clusters,
+#' the modelled and predicted performances of component assemblages,
+#' and other results associated with a functional clustering.
+#' Test and prioritize the significance of the different components
+#' that make up the interactive system,
+#' of the different assemblages of components that make up the dataset,
+#' and of the different performances observed on the component assemblages.
+#' The package contains three groups of functions: \cr
+#'
+#' \code{\link{fclust}}, \code{\link{fclust_plot}},
+#' \code{\link{fclust_write}} and \code{\link{fclust_read}},
+#' fits a clustering tree of functional components
+#' to observed assemblage performances,
+#' plots, saves and loads the results obtained
+#' using the function \code{fclust}, respectively; \cr
+#'
+#' \code{\link{ftest}}, \code{\link{ftest_plot}},
+#' \code{\link{ftest_write}} and \code{\link{ftest_read}},
+#' tests the significance of the different components,
+#' assemblages and performances depending on the option choisen,
+#' plots, saves and loads the results obtained
+#' using the function \code{ftest}, respectively; \cr
+#'
+#' \code{\link{fboot}}, \code{\link{fboot_plot}},
+#' \code{\link{fboot_write}} and \code{\link{fboot_read}},
+#' evaluates the robustness of a functional clustering
+#' by bootstrapping from 1 to (all-1) observations
+#' of assemblages or performances depending on the option choisen,
+#' plots, saves and loads the results obtained
+#' using the function \code{fboot}, respectively; \cr
+#'
+#' The function \code{\link{fclust}} needs to be run first.
+#' The functions \code{\link{ftest}} and \code{\link{fboot}}
+#' use the result of the function \code{\link{fclust}}.
+#' Both the last ones are time-consumming.
+#'
+#' @details
+#'   None.
+#'
+#' @author Benoît Jaillard (maintainer)
+#'
+#' @references{
+#'
+#'   Jaillard B., Richon C., Deleporte P., Loreau M. and Violle C. (2018)
+#'   \emph{An a posteriori species clustering
+#'   for quantifying the effects of species
+#'   interactions on ecosystem functioning}.
+#'   Methods in Ecology and Evolution, 9:704-715.
+#'   \url{https://doi.org/10.1111/2041-210X.12920}. \cr
+#'
+#'   Jaillard B., Deleporte P., Loreau M. and Violle C. (2018)
+#'   \emph{A combinatorial analysis using observational data
+#'   identifies species that govern ecosystem functioning}.
+#'   PLoS ONE 13(8): e0201135.
+#'   \url{https://doi.org/10.1371/journal.pone.0201135}. \cr
+#'}
+#'
+NULL
+
+#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+#
+# End of file                                                              ####
+#
+#xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

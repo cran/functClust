@@ -1,0 +1,319 @@
+---
+title: "Overview of *functClust*"
+author: "Benoît Jaillard"
+date: "`r Sys.Date()`"
+output: 
+  knitr:::html_vignette:
+    toc: true
+    fig_caption: yes
+vignette: >
+  %\VignetteIndexEntry{Overview of functClust}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment  = "#>",
+  out.width = "100%"
+)
+```
+
+
+## Aim of functional clustering
+
+An *interactive system* is here understood as a collection of *components*
+that interact when they co-occur, and whose interactions generate 
+an emergent, collective, system-specific *performance*, function or property.
+When we subsample different components that belong to the system, 
+we observe that different component *assemblages* generate 
+different emergent, collective, system-specific performances. 
+We thus assume that different values of performances 
+are associated with different composition of component assemblages,
+that is to say with different co-occurring components.
+
+The aim of functional clustering is to identify the role played 
+by each component belonging to the system 
+on the genesis of the emergent, collective, system-specific performance.
+For doing that, we need a collection of subsamples, *i.e.* sub-systems, 
+of different elemental composition,
+*i.e.* different assemblages of components,
+of which emergent, collective, system-specific performances are observed.
+
+
+A *functional clustering* groups the components of the interactive system
+on the basis of their effects on the system-specific performance.
+The effect on assemblage performance can be induce
+when the components occur alone or in combination with other components.
+The procedure groups first the components that induce similar effects 
+on the performance when they co-occur with the same other components
+within the system:
+a functional group clusters together components 
+that are functionally redundant for the performance in consideration.
+
+We term *assembly motif* a combination of functional clusters, 
+more precisely speaking a combination of components
+that belong to different functional clusters.
+Each assembly motif describes therefore a kind of component assemblage.
+We assume that each assembly motif 
+is associated with a mean value of observed performances.
+Clustering components in functional groups generates 
+a classification of component assemblages based on their assembly motif.
+We evaluate the quality of each component clustering
+by the coefficient of determination of the performance 
+modelled by the classification of component assemblages.
+An iterative process then enables 
+identifying the component clustering in functional groups 
+that best accounts for the observed performance,
+*i.e.* that maximizes the coefficient of determination 
+of the observed performance. 
+
+The combinatorial approach therefore generates a tree
+that groups functionally redundant components of the system
+for the system-specific performance in consideration. 
+It is a functional clustering of components that belong to 
+the interactive system for the performance in consideration.
+
+
+## Method for clustering functionally redundant components of an interactive system 
+The functional clustering of components 
+belonging to an interactive system works in three steps:
+
+
+```{r pressure, echo=FALSE, fig.cap="Method for clustering functionally redundant components: (a) Component clustering, (b) Identification of assembly motifs, (c) Classification of sub-systems by assembly motif, (d) Computation of convergence criterion, (e) Iterative ajustment of component clustering", out.width = '100%'}
+knitr::include_graphics("a.Figure.2.png")
+```
+
+
+* first, the **primary tree** that best accounts
+for the observed performance of component assemblages is fitted (Figure 1).
+This primary tree runs from a trunk, that is the trivial cluster 
+where all components belonging to the system are clustered together, 
+towards leaves where each component is isolated in a singleton. 
+Each tree level corresponds to a clustering of compoenets 
+in a given number of clusters, and the whole tree has therefore 
+a deep equal to the number of components.
+Quality of clustering is evaluated by its residual sum of squares (*RSS*),
+that is its coefficient of determination (*R2* )
+when divided by the total sum of squares (*TSS*), minus one. 
+Trunk is under-fitted (*R2 = 0*) and leaves are over-fitted (*R2 = 1*): 
+neither the first one nor the last ones are informative. 
+The most informative component clustering is located 
+between the trunk and the leaves.
+
+* second, the **performance of each assemblage** is predicted
+by cross-validation using the primary tree. 
+When all components belonging to the system are clustered together
+in a trivial large cluster, 
+the performance of each assemblage can be predicted by cross-validation
+as the mean performance of all other assemblages. 
+As the number of component clusters increases, 
+the size of assembly motifs decreases, 
+then the predictability of the performance of each assemblage also decreases 
+until the assemblage is the sole representative of its assembly motif:
+then its performance can no longer be predicted by cross-validation.
+We consider the last prediction, 
+*i.e.* the prediction based on a component clustering 
+in a smaller number of clsuters, thus a less efficient model, 
+as the best possible one for this assemblage.
+The procedure allows to get the best possible prediction
+for each component assemblage. 
+The method of cross-validation is a leave-one-out 
+when the size of assembly motifs is small,
+and optionally a jackknife method 
+when the size of assembly motifs is larger.
+
+* third, a **secondary tree** is extracted from the primary tree,
+by pruning it on the basis of its predictive ability and its parcimony.
+Each component clustering in a given number of clusters,
+*i.e.* each tree level, is a model:
+the model predictive ability is evaluated by cross-validation 
+and the model parcimony is evaluated by the Akaike Informative Criterion (AIC).
+Then each component clustering along the tree 
+is compared to each others for its predictive ability and its AIC: 
+a component clustering that improves the model predictive ability 
+and decreases the model AIC in regard to previous models
+is selected as a more efficient model.
+The most efficient model has, in the same time, 
+the highest predictive ability and the lowest AIC.
+The size of the most efficient model defines
+the optimum number of component clusters.
+The secondary tree is the primary tree
+pruned above the optimum number of component clusters.
+
+
+## Format of dataset
+
+The dataset consists of 
+a collection of different assemblages of components
+belonging to the system in consideration,
+of which the elemental composition is known,
+and one or several emergent, collective, system-specific performances
+are observed. 
+The system in consideration is composed of all the components filled.
+Each assemblage can achieve several performances,
+for instance a same performance observed at different times
+or under different conditions
+(monitoring of biomass production over time or on various places),
+or performances of different natures for a multi-functional analysis.
+
+The format of the dataset is as follows.
+On a first line: assemblage identity, 
+a list of components identified by their names,
+a list of performances identified by their names.
+On following lines, a line by assemblage,
+name of the assemblage,
+a sequence of 0 (absence) and 1 (presence of component within the assemblage),
+a sequence of numeric values for each observed performances,
+over time, over places, 
+or over performances of different natures.
+
+Here, for instance, the famous experiment Biodiversity II 
+done at Cedar Creek, University of Minnesota, USA, 
+by David Tilman and his collaborators. 
+The interactive system is a meadow, composed of 16 grassland species, 
+observed on 91 plots over 3 years. 
+The dataset includes 91 lines, a line by assemblage identified by *"Plot"*.
+The occurrence of 16 species (identifed as *"Achmi"*, *"Agrsm"*, *"Amocan"*, *"Andge"*, *"Asctu"*, *"Elyca"*, *"Koecr"*, *"Lesca"*, *"Liaas"*, *"Luppe"*, *"Monfi"*, *"Panvi"*, *"Petpu"*, *"Poapr"*, *"Schsc"* and *"Sornu"*)
+are noted by *"0"* (absent or *FALSE*) or *"1"* (present or *TRUE*). 
+The assemblage performances are identified 
+as *"y2004"*, *"y2005"* and *"y2006"*.
+
+
+```{r format_data}
+library(functClust)
+
+# production of biomass in 2004, 2005 and 2006 in Biodiversity II experiment
+data(CedarCreek.2004.2006.dat)
+dim(CedarCreek.2004.2006.dat)
+colnames(CedarCreek.2004.2006.dat)
+rownames(CedarCreek.2004.2006.dat)
+
+# the data for each component assemblage
+line <- 10
+CedarCreek.2004.2006.dat[line, ]
+```
+
+
+
+## The main functions of *functClust*
+
+The package *functClust* contains two groups of main functions. 
+The first group includes 4 functions (*fclust*, *fclust_plot*, *fclust_write* 
+and *fclust_read*) which allow a basic combinatorial analysis, 
+its plotting and its saving.
+
+* **fclust**  does all computations.
+It fits a primary tree of component clustering
+to assemblage performances,
+extracts a secondary tree for its predicting ability and parcimony,
+predicts the performance of each assemblage using the whole secondary tree,
+then returns an object containing 
+the results of the functional clustering
+of system components: primary and secondary trees
+of component clustering,
+modelled and predicted performances of component assemblages,
+composition and mean performances of assembly motifs.
+
+* **fclust_plot**  finalizes the findings. 
+It takes the object generated by the function *fclust*,
+then plots numerous useful graphs
+for illustrating results and the ways by which they were obtained:
+primary and secondary trees of component clustering,
+composition and mean performances of assembly motifs,
+mean performances of assemblages containing a given components,
+observed, simulated and predicted performances of assemblages
+labelled by assembly motif,
+performances of some given assemblages, etc... 
+
+* **fclust_write** and **fclust_read** allow 
+to save and load, respectively, the results of a functional clustering
+generated by the function *fclust*.
+
+Both the functions *fclust* and *fclust_plot* 
+are managed by a set of options.
+
+
+The second group of functions also includes 4 functions 
+(*ftest*, *ftest_plot*, *ftest_write* and *ftestread*) 
+which allow to test the significance *(i)* of different components 
+that belong to the interactive system, basic combinatorial analysis, 
+*(ii)* of different assemblages that compose the dataset,
+*(iii)* of different observed performances if it is the case,
+and *(iv)* to evaluate the robustness of component clustering 
+if several performances were observed. 
+
+* **ftest**  does different computations
+depending on the options chosen. All tests are time-consumming, 
+because they are based on repeated combinatorial analysis 
+done on slightly modified datasets.
+
+* **ftest_plot**  plots numerous graphs
+for illustrating results. 
+
+* **ftest_write** and **ftest_read** allow 
+to save and load, respectively, the results of testing.
+
+All the functions are managed by a set of options.
+However, the package *functClust* shows all the functions
+used for analysing a dataset by a functional clustering
+and plot the results. Each function can be directly used 
+for specific computation or plotting. 
+
+
+## Note 
+
+Note that some computations are time-consuming. 
+To facilitate the monitoring of the smooth running of the computations,
+informations are written on the Console 
+and graphs are drawn on the Plots panel. 
+The writting are enable or disable by the "verbose" option. 
+
+```{r foptions_1}
+getOption("verbose")
+# to follow the computations
+options(verbose = TRUE)
+# to deactivate the option
+options(verbose = FALSE)
+```
+
+
+
+## Availability and installation of *functClust*
+
+The package *functClust* (version 0.1.0) is available
+on :
+
+* **the gitlab** of Eco&Sols: https://gitlab.com/ecosols/functclust/ ,
+
+* **the dataverse** of INRAE: https://data.inra.fr/privateurl.xhtml?token=348d7f33-0cf7-41cf-9516-c547846e9498 , 
+
+* **the R-CRAN** soon after its submission: https://CRAN.R-project.org .
+
+It can be load and install with:
+
+``` {r install}
+#install.packages("functClust")
+```
+
+
+## References
+
+Jaillard, B., Richon, C., Deleporte, P., Loreau, M. and Violle, C. (2018)
+ An a posteriori species clustering
+ for quantifying the effects of species
+ interactions on ecosystem functioning.
+ *Methods in Ecology and Evolution, 9:704-715.*
+ https://doi.org/10.1111/2041-210X.12920
+
+Jaillard, B., Deleporte, P., Loreau, M. and Violle, C. (2018)
+ A combinatorial analysis using observational data
+ identifies species that govern ecosystem functioning.
+ *PLoS ONE 13(8): e0201135.*
+ https://doi.org/10.1371/journal.pone.0201135
+ 
+Jaillard, B., Deleporte,  P., Isbell, F., Loreau, M. and Violle, C. (submitted)
+ Identifying plant functional groups that govern ecosystem functioning in a 
+ long-term biodiversity experiment.

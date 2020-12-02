@@ -1,0 +1,162 @@
+---
+title: "The simplest use of *functClust*"
+author: "Benoît Jaillard"
+date: "`r Sys.Date()`"
+output: 
+  knitr:::html_vignette:
+    toc: true
+    fig_caption: yes
+vignette: >
+  %\VignetteIndexEntry{The simplest use of functClust}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment  = "#>",
+  out.width = "100%"
+)
+```
+
+## The computational function *fclust*
+
+The package *functClust* contains four main functions,
+*fclust*, *fclust_plot*, *fclust_write* and *fclust_read* 
+(see vignette **Overview of functClust**).
+
+The input of *fclust* is recorded in a *data.frame*
+such as described in vignette **a.Overview_of_functClust**. 
+The colnames should included: 
+assemblage identity ("Plot" in *CedarCreek.2004.2006.dat*); 
+a matrix of component occurrence 
+(from *"Achmi"* until *"Sornu"* in *CedarCreek.2004.2006.dat*);
+and at least one observed performance 
+(*"y2004"*, *"y2005"* and *"y2006"* in *CedarCreek.2004.2006.dat*).
+Each assemblage is filled on a line.
+
+For running, the function *fclust* needs also to know 
+the number *nbElt* of components 
+belonging to the interactive system in consideration.
+All other options are filled by default.
+The possibilities offered by the options are presented 
+in the vignette **The options of fclust**.
+
+
+```{r simplest_use_fclust, results="hide", out.width="48%", fig.align="default", fig.show="hold", fig.cap=c("The simplest use of fclust")}
+library(functClust)
+nbElt <- 16
+dat.2004 <- CedarCreek.2004.2006.dat[ , c(1, 1 + 1:nbElt, 1 + nbElt + 1)]
+res <- fclust(dat.2004, nbElt)
+```
+
+In previous code, we select in *dat.2004* :
+*(i)* the first column of file *CedarCreek.2004.2006.dat*, 
+that contains "Plot", *i.e.* the identity of assemblages, 
+*(ii)* the next *nbElt = 16* following columns,
+that contain the matrix of component occurrence,
+and *(iii)* only one assemblage performance, here the biomass *"y2004"*
+harvested in summer 2004.
+
+
+## The plotting function *fclust_plot*
+
+On another hand, the function *fclust_plot* plots only
+the main results obtained by a functional clustering 
+when used without any option. Even *main* is "Title" by default.
+
+
+```{r simplest_use_plotfclust, results="hide", out.width="48%", fig.align="default", fig.show="hold", fig.cap=c("The simplest use of fclust_plot")}
+fclust_plot(res, main = "BioDiv2 2004")
+```
+
+Both the first graphs correspond to the validated, secondary tree 
+pruned above the optimum number of component clusters. 
+The left graph shows the hierarchical tree of component clustering, 
+the right graph the names and contents of component clusters.
+The default options corresponding to the graph 
+are included in the graph title (here "tree" and "prd"). 
+The *x-axis* of tree is the system components.
+The *y-axis* of tree is the quality criterion of modelling, 
+*i.e.* the coefficient of determination *R2* or efficiency *E*. 
+On tree, each cluster is plotted with a different colour, 
+and named by a letter. 
+The leaves, *i.e.* the highest horizontal lines, are plotted 
+at the level of the highest coefficient of determination 
+of modelling (*R2-value*). 
+Modelling efficiency (*E-value*) is indicated by a red dashed line.
+Values of *R2*, *E* and *E/R2* are indicated. 
+
+Both following graphs show the model goodness-of-fit.
+The default options corresponding to the graph 
+are included in the graph title. 
+Left and right graphs differ only by the used colours and symbols.
+On left graph, the performances of assemblages
+belonging to different assembly motifs
+are plotted with different symbols.
+The symbols correspond to performances predicted by the model 
+(modelled performances), of which the goodness-of-fit 
+is evaluated by tree coefficient of determination *R2*.
+The vertical lines correspond to performances 
+independently predicted by cross-validation
+(independently predicted performances),
+of which the quality is evaluated by tree efficiency *E*.
+Global statistic are indicated (number of component clusters, 
+number of assembly motifs, *R2*,
+*E* and the ratio *E/R2*).
+A variance analysis is indicated on detailled graph,
+on the left side for modelled performances, 
+on the right side for performances predicted by cross-validation,
+using a defaut *pvalue = 0.05*. 
+
+On the right graph, all assemblages are plotted with only a colour and symbol.
+The graph is convenient for overview the model goodness-of-fit,
+but also for publication.
+
+Finally, a boxplot of observed performances of assemblages 
+belonging to different assembly motifs is plotted.
+Means are indicated with different symbols, 
+of same symbol and colour as those used for different assembly motifs 
+in previous detailled graph of model goodness-of-fit. 
+The size (in number of assemblages) of each assembly motifs
+is indicated on the left side of the graph.
+The results of a variance analysis of observed performances
+by assembly motif is indicated on the right side of the graph. 
+The last graph indicated the names of assemblages
+belonging to different assembly motifs.
+
+
+## The output-input functions *fclust_write* and *fclust_read*
+
+Both the functions *fclust_write* and *fclust_read*
+allow to record and reload the results obtained 
+from a functional clustering. The results are recorded in CSV-format 
+into 5 files that bring together elements of same kind. If *filename = "myRecord"*, the files are named: *"myRecord.options.csv"*, *"myRecord.vectors.csv"*, *"myRecord.trees.csv"*, 
+*"myRecord.matrices.csv"* and *"myRecord.stats.csv"*.
+
+```{r simplest_use_writefclust, results="hide", out.width="48%", fig.align="default", fig.show="hold", fig.cap=c("The simplest use of fclust_plot")}
+# fclust_write(res, filename = "myRecord")
+# res <- fclust_read(filename = "myRecord")
+```
+
+
+
+## Note 
+
+Note that some computations are time-consuming. 
+To facilitate the monitoring of the smooth running of the computations,
+informations are written on the Console 
+and graphs are drawn on the Plots panel. 
+The writting are enable or disable by the "verbose" option. 
+
+```{r foptions_2}
+getOption("verbose")
+# to follow the computations
+options(verbose = TRUE)
+# to deactivate the option
+options(verbose = FALSE)
+```
+
+
